@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
-import { JWT_SECRET } from "./config";
+const { JWT_SECRET } = require("./config");
 
-export function authMiddleware(req, res, next) {
+const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split("")[1];
+    const token = authHeader && authHeader.split(" ")[1];
 
     if(!token) {
         return res.status(403).json({
@@ -22,9 +22,13 @@ export function authMiddleware(req, res, next) {
             next()
         }
     } catch(error) {
-        console.error("Verification error: ", error);
+        console.error("Verification error: ", error.message);
         res.status(500).json({
             message: "Internal server error"
         })
     }
+}
+
+module.exports = {
+    authMiddleware
 }
