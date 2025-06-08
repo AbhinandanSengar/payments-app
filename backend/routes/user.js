@@ -13,7 +13,6 @@ userRouter.post("/signup", async (req, res) => {
         firstName: z.string().trim(),
         lastName: z.string().trim(),
         username: z.string().trim().toLowerCase(),
-        email: z.string().email().trim().toLowerCase(),
         password: z.string().min(6, { message: "Minimum 6 charcters" })
     });
 
@@ -24,7 +23,7 @@ userRouter.post("/signup", async (req, res) => {
         });
     }
 
-    const { firstName, lastName, username, email, password } = parsedData.data;
+    const { firstName, lastName, username, password } = parsedData.data;
 
     try {
         const existingUser = await User.findOne({ username });
@@ -40,7 +39,6 @@ userRouter.post("/signup", async (req, res) => {
             firstName,
             lastName,
             username,
-            email,
             password: hashPassword
         });
         const userId = user._id;
@@ -158,7 +156,6 @@ userRouter.get("/bulk", async (req, res) => {
                 { firstName: { "$regex": filter, "$options": "i" } },
                 { lastName: { "$regex": filter, "$options": "i" } },
                 { username: { "$regex": filter } },
-                { email: { "$regex": filter } }
             ]
         });
 
