@@ -146,7 +146,39 @@ userRouter.put("/update", authMiddleware, async (req, res) => {
 })
 
 userRouter.get("/bulk", async (req, res) => {
-    
+    const filter = req.query.filter || "";
+
+    try {
+        const users = await User.find({
+            $or: [
+                { firstName: { "$regex": filter, "$options": "i" } },
+                { lastName: { "$regex": filter, "$options": "i" } },
+                { username: { "$regex": filter } },
+                { email: { "$regex": filter } }
+            ]
+        });
+
+        if(users.length === 0) {
+            return res.status(404).json({
+                message: "No users found. Please search another"
+            });
+        }
+
+        res.status(200).json({
+            message: "User fetched successfully",
+            users: users.map(user => ({
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username
+            }))
+        })
+    } catch(error) {
+        console.error("user get error: ", error.message);
+        res.status(500).json({
+            message: "Internal server error"
+        });
+    }
 });
 
 module.exports = userRouter;
