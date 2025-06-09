@@ -52,6 +52,7 @@ userRouter.post("/signup", async (req, res) => {
 
         res.status(200).json({
             message: "Signed up successfully",
+            userId: userId,
             token: token
         });
     } catch(error) {
@@ -94,11 +95,12 @@ userRouter.post("/signin", async (req, res) => {
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
 
         res.status(200).json({
-            message: "Signed up successfully",
+            message: "Signed in successfully",
+            userId: user._id,
             token: token
         });
     } catch(error) {
-        console.error("Signup error: ", error.message);
+        console.error("Signin error: ", error.message);
         res.status(500).json({
             message: "Internal server error"
         });
