@@ -3,7 +3,9 @@ import { SearchIcon } from "../icons/SearchIcon"
 import { Button } from "./Button"
 import { useState } from "react"
 
-export const Users = ({ users }) => {
+export const Users = ({ users, loggedInUserId }) => {
+
+    const filteredUsers = users.filter(user => user._id !== loggedInUserId);
 
     {/* max-w-2xl mx-auto -- for centering it(use for both balance and users in the outer parent div) */}
     return (
@@ -14,7 +16,7 @@ export const Users = ({ users }) => {
                 <input type="text" className="w-full bg-transparent focus:outline-none" placeholder="Search users..." />
             </div>
             <div className="space-y-4">
-                {users.map(user => <User key={user._id} user={user} />)}
+                {filteredUsers.map(user => <User key={user._id} user={user} />)}
             </div>
         </div>
     )
@@ -27,10 +29,10 @@ function User({ user }) {
     async function send() {
         setLoading(true);
 
-        await new Promise(res => setTimeout(res, 2000));
+        await new Promise(res => setTimeout(res, 1000));
 
         setLoading(false);
-        navigate("/send");
+        navigate("/send?id=" + user._id + "&name=" + user.firstName);
     }
     return (
         <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 hover:shadow transition-shadow">
