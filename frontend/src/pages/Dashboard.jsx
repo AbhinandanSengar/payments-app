@@ -1,6 +1,7 @@
-import { AppBar } from "../frontend/src/components/AppBar"
-import { Balance } from "../frontend/src/components/Balance"
-import { Users } from "../frontend/src/components/Users"
+import { AppBar } from "../components/AppBar"
+import { Balance } from "../components/Balance"
+import { Users } from "../components/Users"
+
 
 export const Dashboard = ({ users }) => {
     return (

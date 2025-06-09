@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { SignUp } from '../../pages/Signup';
-import { SignIn } from '../../pages/Signin';
-import { Dashboard } from '../../pages/Dashboard';
-import { SendMoney } from '../../pages/SendMoney';
+import { SignUp } from './pages/Signup';
+import { SignIn } from './pages/Signin';
+import { Dashboard } from './pages/Dashboard';
+import { SendMoney } from './pages/SendMoney';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {

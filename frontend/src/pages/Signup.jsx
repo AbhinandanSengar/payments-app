@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Bottom } from "../frontend/src/components/Bottom";
-import { Button } from "../frontend/src/components/Button";
-import { Heading } from "../frontend/src/components/Heading"
-import { Input } from "../frontend/src/components/Input";
-import { SubHeading } from "../frontend/src/components/Subheading"
+import { Heading } from "../components/Heading";
+import { SubHeading } from "../components/SubHeading";
+import { Input } from "../components/Input";
+import { Button } from "../components/Button";
+import { Bottom } from "../components/Bottom";
 
 
 export const SignUp = () => {

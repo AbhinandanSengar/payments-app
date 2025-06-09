@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Button } from "../frontend/src/components/Button"
-import { Input } from "../frontend/src/components/Input"
+import { Input } from "../components/Input";
+import { Button } from "../components/Button";
 
 export const SendMoney = () => {
     const [loading, setLoading] = useState(false);
