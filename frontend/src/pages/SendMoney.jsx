@@ -1,9 +1,10 @@
+import axios from "axios";
 import { useState } from "react"
+import { BACKEND_URL } from "../config";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
 import { useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const SendMoney = () => {
     const [amount, setAmount] = useState("");
@@ -14,25 +15,27 @@ export const SendMoney = () => {
     const name = searchParams.get("name");
 
     async function transfer() {
+        const parsedAmount = Number(amount);
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            setLoading(false);
+            return toast.error("You are not authenticated. Please login again.");
+        }
+
+        if (!toId) {
+            setLoading(false);
+            return toast.error("Recepient ID is missing.");
+        }
+
+        if (!parsedAmount || parsedAmount <= 0) {
+            setLoading(false);
+            return toast.error("Please enter a valid amount greater than zero");
+        }
+        
         try {
             setLoading(true);
-
-            const token = localStorage.getItem("token");
-            if (!token) {
-                setLoading(false);
-                return alert("You are not authenticated. Please login again.");
-            }
-
-            if (!toId) {
-                setLoading(false);
-                return alert("Recepient ID is missing.");
-            }
-
-            const parsedAmount = Number(amount);
-            if (!parsedAmount || parsedAmount <= 0) {
-                setLoading(false);
-                return alert("Please enter a valid amount greater than zero");
-            }
+            const toastId = toast.loading("Initiating transfer...");
 
             const response = await axios.post(`${BACKEND_URL}/api/v1/account/transfer`, {
                 toAccountId: toId,
@@ -43,15 +46,13 @@ export const SendMoney = () => {
                 }
             });
 
-            alert(response.data.message);
+            await new Promise(res => setTimeout(res, 1000));
+            toast.success(response.data.message || "Transfer Successfull", { id: toastId });
+            setAmount("");
         } catch (error) {
-            if (error.response) {
-                console.error("Error sending money: ", error.response.data);
-                alert(`Error: ${error.response.data.message || "Bad Request"}`);
-            } else {
-                console.error("Error sending money:", error.message);
-                alert("Error sending money. Please try again.");
-            }
+            console.error("transfer error: ", error);
+            const errorMsg = error?.response?.data?.message || "Transfer failed. Please try again.";
+            toast.error(errorMsg, { id: toastId });
         } finally {
             setLoading(false);
         }

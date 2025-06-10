@@ -7,6 +7,7 @@ import { Bottom } from "../components/Bottom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import toast from "react-hot-toast";
 
 export const SignIn = () => {
     const navigate = useNavigate();
@@ -16,6 +17,10 @@ export const SignIn = () => {
     const [password, setPassword] = useState("");
 
     async function signin() {
+        if(!username || !password) {
+            return toast.error("All fields are required.")
+        }
+
         try {
             setLoading(true);
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
@@ -23,11 +28,16 @@ export const SignIn = () => {
                 password
             });
 
+            toast.success(response.data.message);
+
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("userId", response.data.userId);
+
             navigate("/dashboard");
         } catch (error) {
             console.error("Error signing up: ", error);
+            const errorMsg = error?.message?.data?.message || "Something went wrong while signing in";
+            toast.error(errorMsg);
         } finally {
             setLoading(false);
         }

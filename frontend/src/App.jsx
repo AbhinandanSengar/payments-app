@@ -5,7 +5,8 @@ import { SignIn } from './pages/Signin';
 import { useEffect, useState } from 'react'
 import { Dashboard } from './pages/Dashboard';
 import { SendMoney } from './pages/SendMoney';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={true} toast-options={{ duration: 3000 }} />
       <BrowserRouter>
         <Routes>
           <Route path='/signup' element={<SignUp />} />

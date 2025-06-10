@@ -2,6 +2,7 @@ import axios from "axios"
 import { Button } from "./Button";
 import { BACKEND_URL } from "../config"
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const Balance = () => {
     const [balance, setBalance] = useState(null);
@@ -10,6 +11,7 @@ export const Balance = () => {
     async function fetchBalance() {
         try {
             setLoading(true);
+            const toastId = toast.loading("Fetching Balance...");
             const token = localStorage.getItem("token");
 
             await new Promise(res => setTimeout(res, 500));
@@ -20,8 +22,12 @@ export const Balance = () => {
                 }
             });
             setBalance(response.data.balance);
+            
+            toast.success(response.data.message, { id: toastId });
         } catch(error) {
             console.error("Error fetching balance: ", error);
+            const errorMsg = error?.message?.data?.message || "Something went wrong. Try again";
+            toast.error(errorMsg, { id: toastId });
         } finally {
             setLoading(false);
         }

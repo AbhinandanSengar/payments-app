@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { SearchIcon } from "../icons/SearchIcon"
 import { Button } from "./Button"
 import { useState } from "react"
+import toast from "react-hot-toast"
 
 export const Users = ({ users, loggedInUserId }) => {
 

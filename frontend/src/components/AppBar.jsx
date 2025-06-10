@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 export const AppBar = ({ users, loggedInUserId }) => {
     const navigate = useNavigate();
@@ -39,7 +40,8 @@ export const AppBar = ({ users, loggedInUserId }) => {
         setOpen(false);
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
-        navigate("/signin")
+        toast.success("Logged Out");
+        navigate("/signin");
     }
 
     return (
