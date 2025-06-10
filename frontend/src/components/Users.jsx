@@ -3,10 +3,23 @@ import { SearchIcon } from "../icons/SearchIcon"
 import { Button } from "./Button"
 import { useState } from "react"
 import toast from "react-hot-toast"
+import { useMemo } from "react"
 
 export const Users = ({ users, loggedInUserId }) => {
+    const [searchFilter, setSearchFilter] = useState("");
 
-    const filteredUsers = users.filter(user => user._id !== loggedInUserId);
+    const filteredUsers = useMemo(() => {
+        return users
+                .filter(user => user._id !== loggedInUserId)
+                .filter(user => {
+                const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+                const username = user.username?.toLowerCase() || "";
+                const search = searchFilter.toLowerCase();
+                return fullName.includes(search) || username.includes(search);
+            });
+    }, [users, loggedInUserId, searchFilter]);
+
+    console.log(filteredUsers);
 
     {/* max-w-2xl mx-auto -- for centering it(use for both balance and users in the outer parent div) */}
     return (
@@ -14,10 +27,14 @@ export const Users = ({ users, loggedInUserId }) => {
             <h3 className="mb-4 text-2xl text-gray-700 font-semibold">Users</h3>
             <div className="mb-6 px-3 py-2 flex items-center gap-2 border rounded-md bg-gray-50 shadow-sm">
                 <SearchIcon />
-                <input type="text" className="w-full bg-transparent focus:outline-none" placeholder="Search users..." />
+                <input type="text" className="w-full bg-transparent focus:outline-none" placeholder="Search users..." value={searchFilter} onChange={(e) => setSearchFilter(e.target.value) } />
             </div>
             <div className="space-y-4">
-                {filteredUsers.map(user => <User key={user._id} user={user} />)}
+                {filteredUsers.length > 0 ? (
+                    filteredUsers.map(user => <User key={user._id} user={user} />)
+                ): (
+                    <div className="text-center text-gray-400">No users found</div>
+                )}
             </div>
         </div>
     )
